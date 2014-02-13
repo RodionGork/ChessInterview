@@ -30,7 +30,15 @@ public class Figure {
         this.type = type;
         this.side = side;
     }
-
+    
+    public Type getType() {
+        return type;
+    }
+    
+    public Side getSide() {
+        return side;
+    }
+    
     @Override
     public String toString() {
         return side.letter + "" + type.letter;

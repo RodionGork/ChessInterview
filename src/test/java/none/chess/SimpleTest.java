@@ -20,21 +20,9 @@ import java.util.List;
 
 @RunWith(JUnit4.class)
 public class SimpleTest {
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-
-    @Before
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-    }
-
-    @After
-    public void cleanUpStreams() {
-        System.setOut(null);
-        System.setErr(null);
-    }
-
+    
+    private Desk desk = new Desk();
+    
     @Test
     public void testNoMoves() {
         runFile("001-no-moves.test");
@@ -107,20 +95,27 @@ public class SimpleTest {
 
         List<String> lines = new ArrayList<>(Arrays.asList(text.split("\n")));
 
-        String moves = lines.get(0).trim();
+        String moves = lines.remove(0).trim();
         String movesDesc = moves.isEmpty() ? "(no moves)" : moves;
-        lines.remove(0);
 
-        boolean isCorrect = !lines.get(0).equals("error");
-        lines.remove(0);
-
-        String[] empty = {};
-        Main.main(moves.isEmpty() ? empty : moves.split(" "));
+        boolean isCorrect = !lines.remove(0).equals("error");
+        boolean failure = false;
+        
+        if (!moves.isEmpty()) {
+            for (String move : moves.split("\\s+")) {
+                try {
+                    desk.move(move);
+                } catch (Exception e) {
+                    failure = true;
+                }
+            }
+        }
+        
         if (isCorrect) {
-            Assert.assertEquals("\n\n\033[31mMoves are correct, but chess thinks there is an error:\n" + movesDesc + "\033[m\n\n", "", errContent.toString());
+            Assert.assertFalse("Moves are correct, but chess thinks there is an error:\n" + movesDesc, failure);
             //Assert.assertEquals(StringUtils.join(lines, "\n") + "\n\n", outContent.toString());
         } else {
-            Assert.assertNotEquals("\n\n\033[31mMoves are invalid, but chess does not detect that:\n" + movesDesc + "\033[m\n\n", "", errContent.toString());
+            Assert.assertTrue("Moves are invalid, but chess does not detect that:\n" + movesDesc, failure);
         }
     }
 }
