@@ -1,52 +1,36 @@
 Шахматы
 =======
 
-`interview.java` — консольный проигрыватель шахматных партий.
-Программа получает ходы игроков в качестве аргументов и выводит
-состояние доски с фигурами после этих ходов.
+`ChessInterview` is a console tool for tracking chess piece moves.
 
-Например:
+Given a number of moves in simplified notation it produces the resulting
+position, printing out the board.
 
-    $ interview.java e2-e4 e7-e5
-    8 ♜♞♝♛♚♝♞♜
-    7 ♟♟♟♟-♟♟♟
-    6 --------
-    5 ----♟---
-    4 ----♙---
-    3 --------
-    2 ♙♙♙♙-♙♙♙
-    1 ♖♘♗♕♔♗♘♖
-      abcdefgh
+For example:
 
-В текущем виде `interview.java` никак не проверяет правильность ходов.
+    $ java -jar target/Chess.jar e2-e4 e7-e5
 
-### Что нужно сделать
+    8 BR BN BB BQ BK BB BN BR
+    7 BP BP BP BP -- BP BP BP
+    6 -- -- -- -- -- -- -- --
+    5 -- -- -- -- BP -- -- --
+    4 -- -- -- -- WP -- -- --
+    3 -- -- -- -- -- -- -- --
+    2 WP WP WP WP -- WP WP WP
+    1 WR WN WB WQ WK WB WN WR
+      a  b  c  d  e  f  g  h
 
-Задача: дописать программу таким образом, чтобы она выкидывала исключение:
+*It could be seen that pieces are written as a pairs of letters, first of them
+denoting the side (White or Black) and second the rank (Pawn, kNight, Bishop, Rook, Queen or King).*
 
- 1. При нарушении очерёдности хода (например, два раза подряд ход белых);
- 2. При нарушении правил хода пешкой (pawn).
+This version lacks the functionality of checking the moves for correctness.
 
-Чтобы проверить корректность решения, запустите тесты:
+### Problem Statement
 
-    $ ./gradlew test
+Add checking functionality for signalizing errors of:
 
-В тестах проверяются только ходы пешками, для других фигур валидацию ходов делать не нужно.
+1. The move made by wrong side (i.e. first move done by black or any side making move two times in sequence).
+2. An incorrect pawn move (no need to check "en passant" capture or promotion on the last line).
 
-### Как ходит пешка
-
- * Пешка может ходить вперёд (по вертикали) на одну клетку;
- * Если пешка ещё ни разу не ходила, она может пойти вперёд на две клетки;
- * Пешка не может перепрыгивать через другие фигуры;
- * Пешка может бить фигуры противника только по диагонали вперёд на одну клетку;
- * Также существует взятие на проходе, но им можно пренебречь :)
-
-### Работа с Gradle
-
-Чтобы скомпилировать java-файлы и создать стартовый скрипт приложения, можно воспользоваться командой
-
-    $ ./gradlew installApp
-
-Она создаст стартовый скрипт
-
-    $ ./build/install/interview.java/bin/interview.java
+To build the project you can use [maven](http://maven.apache.org) or any IDE with maven support (NetBeans, Idea).
+Sample build and run commands are in the `build_run.sh` file.
