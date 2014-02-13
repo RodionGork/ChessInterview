@@ -1,5 +1,8 @@
-Шахматы
-=======
+#Chess Interview
+
+Here is a problem which was offered to me at some job interview.
+
+-----
 
 `ChessInterview` is a console tool for tracking chess piece moves.
 

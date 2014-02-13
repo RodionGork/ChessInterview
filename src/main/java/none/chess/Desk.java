@@ -39,9 +39,7 @@ public class Desk {
         Character xTo = moveMatcher.group(3).charAt(0);
         Integer yTo = Integer.parseInt(moveMatcher.group(4));
         if (figures.contains(yFrom, xFrom)) {
-            if (!check(yTo, xTo, yFrom, xFrom)) {
-                throw new Exception("Pawn move error");
-            }
+            check(yTo, xTo, yFrom, xFrom);
         } else {
             throw new Exception("No figure here!");
         }
@@ -50,47 +48,46 @@ public class Desk {
         moves++;
     }
     
-    private boolean check(int yTo, char xTo, int yFrom, char xFrom) {
+    private void check(int yTo, char xTo, int yFrom, char xFrom)
+            throws Exception {
         Figure f = figures.get(yFrom, xFrom);
         Figure prey = figures.get(yTo, xTo);
         
         if ((f.getSide() == BLACK) == (moves % 2 == 0)) {
-            return false;
+            throw new Exception("Wrong side to move: " + f.getSide());
         }
         
         if (f.getType() != PAWN) {
-            return true;
+            return;
         }
         
         int row = f.getSide() != BLACK ? yFrom : 9 - yFrom;
         int targRow = f.getSide() != BLACK ? yTo : 9 - yTo;
         
         if (row < 2 || row > 7 || xTo < 'a' || xTo > 'h') {
-            return false;
+            throw new Exception("Piece falls out of the board");
         }
         
         if (xTo != xFrom) {
             if (Math.abs(xTo - xFrom) != 1 || targRow != row + 1) {
-                return false;
+                throw new Exception("Incorrect pawn capture");
             }
             if (prey == null || prey.getSide() == f.getSide()) {
-                return false;
+                throw new Exception("No enemy piece to capture");
             }
-            return true;
+            return;
         }
         
         if (targRow - row != 1) {
             if (targRow != 4 || row != 2) {
-                return false;
+                throw new Exception("Wrong target square rank");
             }
         }
         
         if (prey != null || (row == 2
                 && figures.get(f.getSide() == WHITE ? 3 : 6, xFrom) != null)) {
-            return false;
+            throw new Exception("Path is occupied");
         }
-        
-        return true;
     }
 
     @Override

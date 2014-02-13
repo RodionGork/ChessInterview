@@ -98,24 +98,24 @@ public class SimpleTest {
         String moves = lines.remove(0).trim();
         String movesDesc = moves.isEmpty() ? "(no moves)" : moves;
 
-        boolean isCorrect = !lines.remove(0).equals("error");
-        boolean failure = false;
+        boolean isCorrect = !lines.remove(0).trim().equals("error");
+        String failure = null;
         
         if (!moves.isEmpty()) {
             for (String move : moves.split("\\s+")) {
                 try {
                     desk.move(move);
                 } catch (Exception e) {
-                    failure = true;
+                    failure = e.getMessage() != null ? e.getMessage() : "exception";
                 }
             }
         }
         
         if (isCorrect) {
-            Assert.assertFalse("Moves are correct, but chess thinks there is an error:\n" + movesDesc, failure);
+            Assert.assertNull("Moves are correct, but chess thinks there is an error: " + failure, failure);
             //Assert.assertEquals(StringUtils.join(lines, "\n") + "\n\n", outContent.toString());
         } else {
-            Assert.assertTrue("Moves are invalid, but chess does not detect that:\n" + movesDesc, failure);
+            Assert.assertNotNull("Moves are invalid, but chess does not detect that: " + movesDesc, failure);
         }
     }
 }
