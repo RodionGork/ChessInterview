@@ -38,9 +38,7 @@ public class Desk {
         Integer yFrom = Integer.parseInt(moveMatcher.group(2));
         Character xTo = moveMatcher.group(3).charAt(0);
         Integer yTo = Integer.parseInt(moveMatcher.group(4));
-        if (figures.contains(yFrom, xFrom)) {
-            check(yTo, xTo, yFrom, xFrom);
-        } else {
+        if (!figures.contains(yFrom, xFrom)) {
             throw new Exception("No figure here!");
         }
         figures.put(yTo, xTo, figures.get(yFrom, xFrom));
@@ -48,48 +46,6 @@ public class Desk {
         moves++;
     }
     
-    private void check(int yTo, char xTo, int yFrom, char xFrom)
-            throws Exception {
-        Figure f = figures.get(yFrom, xFrom);
-        Figure prey = figures.get(yTo, xTo);
-        
-        if ((f.getSide() == BLACK) == (moves % 2 == 0)) {
-            throw new Exception("Wrong side to move: " + f.getSide());
-        }
-        
-        if (f.getType() != PAWN) {
-            return;
-        }
-        
-        int row = f.getSide() != BLACK ? yFrom : 9 - yFrom;
-        int targRow = f.getSide() != BLACK ? yTo : 9 - yTo;
-        
-        if (row < 2 || row > 7 || xTo < 'a' || xTo > 'h') {
-            throw new Exception("Piece falls out of the board");
-        }
-        
-        if (xTo != xFrom) {
-            if (Math.abs(xTo - xFrom) != 1 || targRow != row + 1) {
-                throw new Exception("Incorrect pawn capture");
-            }
-            if (prey == null || prey.getSide() == f.getSide()) {
-                throw new Exception("No enemy piece to capture");
-            }
-            return;
-        }
-        
-        if (targRow - row != 1) {
-            if (targRow != 4 || row != 2) {
-                throw new Exception("Wrong target square rank");
-            }
-        }
-        
-        if (prey != null || (row == 2
-                && figures.get(f.getSide() == WHITE ? 3 : 6, xFrom) != null)) {
-            throw new Exception("Path is occupied");
-        }
-    }
-
     @Override
     public String toString() {
         String crlf = System.getProperty("line.separator");

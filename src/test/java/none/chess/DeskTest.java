@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(JUnit4.class)
-public class SimpleTest {
+public class DeskTest {
     
     private Desk desk = new Desk();
     
@@ -113,9 +113,13 @@ public class SimpleTest {
         
         if (isCorrect) {
             Assert.assertNull("Moves are correct, but chess thinks there is an error: " + failure, failure);
-            //Assert.assertEquals(StringUtils.join(lines, "\n") + "\n\n", outContent.toString());
+            String[] board = desk.toString().split("\\n");
+            for (int i = 0; i < 8; i++) {
+                Assert.assertEquals("Board position differs", lines.get(i).trim(), board[i].trim());
+            }
         } else {
             Assert.assertNotNull("Moves are invalid, but chess does not detect that: " + movesDesc, failure);
         }
     }
+    
 }
