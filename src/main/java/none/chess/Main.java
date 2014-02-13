@@ -1,4 +1,4 @@
-package ru.stiffbeards.chess;
+package none.chess;
 
 public class Main {
 
@@ -12,6 +12,6 @@ public class Main {
             }
         }
 
-        System.out.println(desk.dump());
+        System.out.println(desk);
     }
 }
